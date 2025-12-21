@@ -3,8 +3,8 @@
 Imaging and sequence toolkit for Lageurre-Gaussian mode light, i.e. Orbital Angular Montum(OAM) state.
 
 ```bash
-oam_vqe_project/          # GitHub 저장소 루트  
-├── oam_vqe/              # 실제 패키지 소스 코드 (import oam_vqe)  
+OAM_KIST/          # GitHub 저장소 루트  
+├── OAM_KIST/              # 실제 패키지 소스 코드 (import OAM_KIST)  
 │   ├── __init__.py       # 패키지 초기화 및 버전 정의  
 │   ├── holography.py     # SLM 좌표계 및 홀로그램 생성 함수  
 │   ├── vqe_solver.py     # COBYLA 알고리즘 및 VQE 로직  
