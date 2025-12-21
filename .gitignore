@@ -1,0 +1,35 @@
+# Python 캐시 및 컴파일 파일
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 가상환경 (Virtual Environments)
+venv/
+.venv/
+env/
+
+# 분포 및 패키지 관련 (pip 배포 시 생성됨)
+dist/
+build/
+*.egg-info/
+
+# 실험 데이터 및 결과물 (대용량 이미지 파일 제외 권장)
+# 만약 결과 이미지를 저장하고 싶다면 이 부분을 수정하세요.
+*.npy
+*.npz
+outputs/
+data/
+
+# SLM 홀로그램 이미지 (생성된 비트맵 파일 등)
+*.bmp
+*.png
+*.jpg
+!assets/  # 프로젝트 설명에 필요한 이미지는 예외로 둘 수 있음
+
+# IDE 설정 (PyCharm, VS Code 등)
+.idea/
+.vscode/
+
+# OS 생성 파일
+.DS_Store
+Thumbs.db
