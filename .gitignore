@@ -12,11 +12,31 @@ env/
 dist/
 build/
 *.egg-info/
+MANIFEST
+
+# Sphinx 문서화를 사용하여 생기는 파일
+docs/_build/
+
+# IDE 설정 (PyCharm, VS Code 등)
+.idea/
+.vscode/
+*.swp
+
+# OS 생성 파일
+.DS_Store
+Thumbs.db
+
+# [중요] 보안 및 로컬 설정 파일
+.env
+config.py
+secrets.py
 
 # 실험 데이터 및 결과물 (대용량 이미지 파일 제외 권장)
 # 만약 결과 이미지를 저장하고 싶다면 이 부분을 수정하세요.
 *.npy
 *.npz
+*.csv
+*.h5
 outputs/
 data/
 
@@ -25,11 +45,3 @@ data/
 *.png
 *.jpg
 !assets/  # 프로젝트 설명에 필요한 이미지는 예외로 둘 수 있음
-
-# IDE 설정 (PyCharm, VS Code 등)
-.idea/
-.vscode/
-
-# OS 생성 파일
-.DS_Store
-Thumbs.db

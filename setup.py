@@ -10,6 +10,7 @@ setup(
         "scipy",
     ],
     author="Youngjun Kim",
-    description="Quantum information and technology using OAM states and SLM",
+    author_email="kyjun0915@kist.re.kr",z
+    description="Quantum information and technology using OAM states and SLM for KIST research",
     python_requires=">=3.7",
 )
