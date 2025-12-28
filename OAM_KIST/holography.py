@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import cv2
 
@@ -114,12 +116,56 @@ def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, prepare=False, 
     if not save:
         return hologram_final
     elif save:
-        hologram_final = 255 * hologram_final / np.max(hologram_final)
-        cv2.imwrite(path+name+".png", hologram_final)
+        if not os.path.exists(path):
+            os.mkdir(path)
+        hologram_final = cv2.normalize(hologram_final, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
+        cv2.imwrite(path+"/"+name+".png", hologram_final)
         return 0
     else:
         return 0
 
 
 if __name__ == '__main__':
-    print(inv_sinc(0.5))
+    res = [1920, 1080]
+    pixel_pitch = 8e-6
+    beam_w0 = 0.8e-3
+    l_modes = [-3, -1, 1, 3]
+    weights = [0.4, 0.03, 0.07, 0.5]
+    amp, phase, X, Y = generate_oam_superposition(
+        res=res,
+        pixel_pitch=pixel_pitch,
+        beam_w0=beam_w0,
+        l_modes=l_modes,
+        weights=weights
+    )
+
+    d = 16
+
+    experiments = {
+        "prepare": encode_hologram(
+            Amp=amp,
+            Phase=phase,
+            X=X,
+            Y=Y,
+            pixel_pitch=pixel_pitch,
+            d=d,
+            prepare=True,
+            save=True,
+            path="./outputs",
+            name="l=-16_prepare"
+        ),
+        "measure": encode_hologram(
+            Amp=amp,
+            Phase=phase,
+            X=X,
+            Y=Y,
+            pixel_pitch=pixel_pitch,
+            d=d,
+            measure=True,
+            save=True,
+            path="./outputs",
+            name="l=-16_measure"
+        )
+    }
+    print(experiments)
+
