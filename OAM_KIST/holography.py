@@ -66,7 +66,7 @@ def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, weights):
     return Amp, Phase, X, Y
 
 
-def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, prepare=False, measure=False, save=False, path="", name=""):
+def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, M=1, prepare=False, measure=False, save=False, path="", name=""):
     """phase mask for given amplitude and phase map of superimposed OAM mode.
 
     입력받은 위상, 진폭 정보를 논문 공식에 대입하여 이 상태를 인코딩하는 SLM 홀로그램을 생성합니다.
@@ -81,7 +81,8 @@ def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, prepare=False, 
         Y (np.ndarray[float]): y dependent meshgrid.
         pixel_pitch (float): pixel size. specified at device document
         d (float): grating width. dimension in # of pixel
-        N_steps (float): need to be applied.
+        N_steps (float): number of steps per grating with period d. N_steps=0 is equal to N_steps=d (continuous)
+        M (int): phase depth. M is basically 1
         prepare (bool): decide whether to prepare.
         measure (bool): decide whether to measure.
         save (bool): decide whether to save.
@@ -104,14 +105,22 @@ def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, prepare=False, 
 
     modified_amp = 1 + (1/np.pi)*inv_sinc(Amp)
     modified_amp = modified_amp / np.max(modified_amp)
-
     modified_phase = Phase - np.pi*modified_amp
 
     parity = 0
     if prepare: parity = -1
     elif measure: parity = 1
 
-    hologram_final = modified_amp * np.mod(modified_phase + parity * 2*np.pi * (X * (2/pixel_pitch))/d, 2*np.pi)
+    if N_steps==0: N_steps = d
+    X_normalized = (X + (res[0]*pixel_pitch/2))/(pixel_pitch*d*M)
+    X_grating = X_normalized - X_normalized.astype(int)
+    X_stepped = np.floor(X_grating * N_steps)
+    X_final = cv2.normalize(X_stepped, X_stepped, 0, 1, cv2.NORM_MINMAX)
+
+    hologram = modified_amp * np.mod(modified_phase + (parity * 2*np.pi * X_final), 2*np.pi)
+
+
+    hologram_final = hologram
 
     if not save:
         return hologram_final
@@ -128,7 +137,7 @@ def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, prepare=False, 
 if __name__ == '__main__':
     res = [1920, 1080]
     pixel_pitch = 8e-6
-    beam_w0 = 0.8e-3
+    beam_w0 = 8e-4
     l_modes = [-3, -1, 1, 3]
     weights = [0.4, 0.03, 0.07, 0.5]
     amp, phase, X, Y = generate_oam_superposition(
@@ -139,7 +148,8 @@ if __name__ == '__main__':
         weights=weights
     )
 
-    d = 16
+    d = 8
+    N_steps = 8
 
     experiments = {
         "prepare": encode_hologram(
@@ -149,10 +159,12 @@ if __name__ == '__main__':
             Y=Y,
             pixel_pitch=pixel_pitch,
             d=d,
+            N_steps=N_steps,
+            M=3,
             prepare=True,
             save=True,
             path="./outputs",
-            name="l=-16_prepare"
+            name="l=-16_prepare_step"
         ),
         "measure": encode_hologram(
             Amp=amp,
@@ -161,10 +173,11 @@ if __name__ == '__main__':
             Y=Y,
             pixel_pitch=pixel_pitch,
             d=d,
+            N_steps=N_steps,
             measure=True,
             save=True,
             path="./outputs",
-            name="l=-16_measure"
+            name="l=-16_measure_step"
         )
     }
     print(experiments)
