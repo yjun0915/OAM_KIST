@@ -81,7 +81,7 @@ def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, M=1, prepare=Fa
         Y (np.ndarray[float]): y dependent meshgrid.
         pixel_pitch (float): pixel size. specified at device document
         d (float): grating width. dimension in # of pixel
-        N_steps (float): need to be applied.
+        N_steps (float): number of steps per grating with period d. N_steps=0 is equal to N_steps=d (continuous)
         M (int): phase depth. M is basically 1
         prepare (bool): decide whether to prepare.
         measure (bool): decide whether to measure.
@@ -111,7 +111,8 @@ def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, M=1, prepare=Fa
     if prepare: parity = -1
     elif measure: parity = 1
 
-    X_normalized = (X+ (res[0]*pixel_pitch/2))/(pixel_pitch*d*M)
+    if N_steps==0: N_steps = d
+    X_normalized = (X + (res[0]*pixel_pitch/2))/(pixel_pitch*d*M)
     X_grating = X_normalized - X_normalized.astype(int)
     X_stepped = np.floor(X_grating * N_steps)
     X_final = cv2.normalize(X_stepped, X_stepped, 0, 1, cv2.NORM_MINMAX)
