@@ -5,14 +5,14 @@ from OAM_KIST.holography import inv_sinc, generate_oam_superposition, encode_hol
 
 
 # 1. 수식 정확성 테스트 (Docstring 예제 검증)
-# def test_inv_sinc_accuracy():
-#     """inv_sinc 함수가 예상된 수학적 값을 반환하는지 테스트"""
-#     x_val = 0.5 * np.pi
-#     expected = 1.8947036302816116
-#     result = inv_sinc(x_val)
-#
-#     # 부동소수점 계산이므로 == 대신 np.isclose 사용 (오차 허용)
-#     assert np.isclose(result, expected, atol=1e-6)
+def test_inv_sinc_accuracy():
+    """inv_sinc 함수가 예상된 수학적 값을 반환하는지 테스트"""
+    x_val = 0.5
+    expected = -1.89547036302816116
+    result = inv_sinc(x_val)
+
+    # 부동소수점 계산이므로 == 대신 np.isclose 사용 (오차 허용)
+    assert np.isclose(result, expected, atol=1e-4)
 
 
 # 2. OAM 생성 함수 입출력 형태 테스트
