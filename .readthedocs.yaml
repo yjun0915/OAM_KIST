@@ -3,14 +3,17 @@ version: 2
 build:
   os: ubuntu-22.04
   tools:
-    python: "3.9"
+    python: "3.12"  # [수정 1] 프로젝트가 3.12 기반이므로 버전을 맞춰줍니다.
 
 sphinx:
-  # conf.py 파일의 위치를 알려줍니다.
-  # 만약 conf.py가 docs/conf.py 에 있다면 아래 경로를 docs/conf.py 로 고치세요.
-  # 아까 'source' 폴더를 쓰셨으므로 아래가 맞을 확률이 높습니다.
   configuration: docs/source/conf.py
 
 python:
   install:
+    # [수정 2] 문서 빌드용 라이브러리 설치 (sphinx, myst-parser 등)
     - requirements: docs/requirements.txt
+
+    # [수정 3] ★가장 중요★ 내 패키지(OAM_KIST)를 설치합니다.
+    # 이걸 해야 conf.py에서 import OAM_KIST가 가능합니다.
+    - method: pip
+      path: .
