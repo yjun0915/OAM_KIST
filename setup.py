@@ -6,12 +6,13 @@ long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="OAM_KIST",
-    version="0.2.6",
+    version="0.2.7",
     packages=find_packages(),
     install_requires=[
         "numpy",
         "matplotlib",
         "scipy",
+        "opencv-python"
     ],
     author="Youngjun Kim",
     author_email="kyjun0915@kist.re.kr",

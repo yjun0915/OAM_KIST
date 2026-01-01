@@ -1,17 +1,32 @@
 # OAM KIST
+![Python](https://img.shields.io/badge/python-3670A0?&logo=python&logoColor=ffdd54)
+![PyCharm](https://img.shields.io/badge/pycharm-143?&logo=pycharm&logoColor=black&color=black&labelColor=green)
+![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?&logo=numpy&logoColor=white)
+![OpenCV](https://img.shields.io/badge/opencv-%23white.svg?&logo=opencv&logoColor=white)
+![SciPy](https://img.shields.io/badge/SciPy-%230C55A5.svg?&logo=scipy&logoColor=white)  
+![KIST](https://img.shields.io/badge/KIST-Research-e44126?labelColor=6d6e67)
+![UST](https://img.shields.io/badge/UST-shcool-ef4126?labelColor=4d4d4f)
+![Quantum Optics](https://img.shields.io/badge/⚛️-QuantumOptics-9827AC?labelColor=black)
+![OAM](https://img.shields.io/badge/🌀-OAM-black?labelColor=00C853)
 
-Imaging and sequence toolkit for Lageurre-Gaussian mode light, i.e. Orbital Angular Montum(OAM) state.
+Imaging and sequence toolkit for Lageurre-Gaussian mode light, i.e. Orbital Angular Montum(OAM) state.  
+
 
 ```bash
-OAM_KIST/          # GitHub 저장소 루트  
-├── OAM_KIST/              # 실제 패키지 소스 코드 (import OAM_KIST)  
-│   ├── __init__.py       # 패키지 초기화 및 버전 정의  
-│   ├── holography.py     # SLM 좌표계 및 홀로그램 생성 함수  
-│   ├── vqe_solver.py     # COBYLA 알고리즘 및 VQE 로직  
-│   └── utils.py          # 기타 유틸리티 (시각화 등)  
-├── tests/                # 유닛 테스트 코드  
-├── README.md             # 프로젝트 설명  
-├── requirements.txt      # 의존성 라이브러리 목록  
-├── setup.py              # 패키지 빌드 및 배포 설정  
-└── .gitignore            # 제외할 파일 목록  
+.
+├── OAM_KIST/                # Main Source Code
+│   ├── __init__.py          # Package initialization
+│   ├── holography.py        # Core logic for hologram generation
+│   ├── utils.py             # Helper functions (math, interpolation)
+│   └── outputs/             # Directory for generated images
+├── docs/                    # Documentation (Sphinx)
+│   ├── source/              # Documentation source files (.rst, conf.py)
+│   ├── Makefile             # Build command for Mac/Linux
+│   └── make.bat             # Build command for Windows
+├── tests/                   # Unit Tests
+│   └── test_core.py         # Pytest test cases
+├── main.py                  # Execution script
+├── README.md                # Project overview
+├── requirements.txt         # Dependencies
+└── setup.py                 # PyPI distribution setup
 ```
