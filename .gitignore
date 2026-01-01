@@ -44,4 +44,6 @@ data/
 *.bmp
 *.png
 *.jpg
-!assets/  # 프로젝트 설명에 필요한 이미지는 예외로 둘 수 있음
+
+!assets/
+!assets/**
