@@ -1,4 +1,8 @@
-# OAM KIST
+<div align="center">
+  <img src="assets/logo.png" alt="KIST OAM Logo" width="300">
+  <br>
+</div>
+
 ![Python](https://img.shields.io/badge/python-3670A0?&logo=python&logoColor=ffdd54)
 ![PyCharm](https://img.shields.io/badge/pycharm-143?&logo=pycharm&logoColor=black&color=black&labelColor=green)
 ![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?&logo=numpy&logoColor=white)
