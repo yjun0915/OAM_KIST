@@ -1,0 +1,36 @@
+# .github/workflows/test.yml
+name: Python Test
+
+# 언제 실행할까요? -> main 브랜치에 push나 PR이 올 때
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 리눅스 환경에서 테스트
+
+    steps:
+    # 1. 내 코드를 가져온다
+    - uses: actions/checkout@v3
+
+    # 2. 파이썬 3.12를 설치한다
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.12"
+
+    # 3. 필요한 라이브러리를 설치한다
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -e .  # 내 패키지(OAM_KIST)도 설치
+
+    # 4. 테스트를 돌린다 (tests 폴더가 있어야 함)
+    - name: Run tests with pytest
+      run: |
+        pytest

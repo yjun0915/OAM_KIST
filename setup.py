@@ -1,12 +1,23 @@
 from setuptools import setup, find_packages
 from pathlib import Path
+import os
+
+
+def get_version():
+    init_path = os.path.join(os.path.dirname(__file__), "OAM_KIST", "__init__.py")
+    with open(init_path, "r", encoding="utf-8") as f:
+        for line in f:
+            if line.startswith("__version__"):
+                return line.split("=")[1].strip().strip('"').strip("'")
+    raise RuntimeError("패키지 버전 정보를 찾을 수 없습니다.")
+
 
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="OAM_KIST",
-    version="0.2.7",
+    version=get_version(),
     packages=find_packages(),
     install_requires=[
         "numpy",
