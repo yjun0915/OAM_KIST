@@ -2,25 +2,7 @@ import os
 
 import numpy as np
 import cv2
-
-
-def inv_sinc(x):
-    """Fourier-Tayler transformation of inversed sinc((sin(x)/x)^-1) function
-
-    Args:
-        x (float, np.ndarray[float], optimal): input value x. i.e. -1. <= x <= 1.
-
-    Return:
-        type(arg): approximation of the value of a inversed sinc function for x
-
-    Example:
-        >>> y = inv_sinc(0.5 * np.pi)
-        >>> print(y)
-        1.8947036302816116
-    """
-    x = np.sqrt(1-x)
-    y = 2*x + 3*(x**3)/10 + 321*(x**5)/2800 + 3197*(x**7)/56000 + 445617*(x**9)/13798400
-    return np.sqrt(3/2) * y
+from .utils import inv_sinc
 
 
 def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, weights):
