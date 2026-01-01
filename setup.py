@@ -31,7 +31,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     project_urls={
-        "Documentation": "https://oam-kist.readthedocs.io",
+        "Documentation": "https://yjun0915.github.io/OAM_KIST/",
         "Source": "https://github.com/yjun0915/OAM_KIST",
     },
     python_requires=">=3.7",
