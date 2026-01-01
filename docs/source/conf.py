@@ -7,13 +7,17 @@ sys.path.insert(0, os.path.abspath('../../'))
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+from OAM_KIST import __version__ as version_code
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'OAM_KIST'
 copyright = '2025, Youngjun Kim'
 author = 'Youngjun Kim'
-release = '0.2.7'
+
+release = version_code
+version = version_code
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
