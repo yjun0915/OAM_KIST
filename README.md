@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/logo.png" alt="KIST OAM Logo" width="300">
+  <img src="https://github.com/yjun0915/OAM_KIST/blob/2f28717c0b406c777b690bbf4bc5c9253bb150d7/assets/logo.png" alt="KIST OAM Logo" width="300">
   <br>
 </div>
 
