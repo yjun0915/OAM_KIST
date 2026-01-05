@@ -21,9 +21,10 @@ def test_generate_oam_superposition_shape():
     pixel_pitch = 8e-6
     beam_w0 = 8e-4
     l_modes = [-1, 1]
+    p_modes = [0, 0]
     weights = [0.5, 0.5]
 
-    amp, phase, X, Y = generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, weights)
+    amp, phase, X, Y = generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, p_modes, weights)
 
     assert amp.shape == (100, 100)
     assert phase.shape == (100, 100)
