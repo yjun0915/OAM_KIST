@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.interpolate import interp1d
 
-_lookuptable = np.linspace(-np.pi, 0, 10001)
+_lookuptable = np.linspace(0, np.pi, 10001)
 _sinc_values = np.sinc(_lookuptable / np.pi)
 
 _interpolator = interp1d(
@@ -9,7 +9,7 @@ _interpolator = interp1d(
     y=_lookuptable,
     kind='linear',
     bounds_error=False,
-    fill_value=(-np.pi, 0)
+    fill_value=(0, np.pi)
 )
 
 
