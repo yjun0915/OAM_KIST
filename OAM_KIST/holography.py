@@ -2,6 +2,7 @@ import os
 
 import numpy as np
 import cv2
+from scipy.special import factorial
 
 from .utils import inv_sinc
 
@@ -38,13 +39,11 @@ def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, weights):
 
     E_total = np.zeros_like(Phi, dtype=complex)
     for l, w in zip(l_modes, weights):
-        # E = (sqrt(2)r/w)^|l| * exp(-r^2/w^2) * exp(il*phi)
-        E_total += w * (np.sqrt(2) * R / beam_w0) ** abs(l) * np.exp(-R ** 2 / beam_w0 ** 2) * np.exp(1j * l * Phi)
+        C = np.sqrt(2/(np.pi*factorial(np.abs(l))))
+        E_total += w * C * ((np.sqrt(2) * R / beam_w0) ** abs(l)) * np.exp(-(R**2) / (beam_w0**2)) * np.exp(-1j * l * Phi)
 
     Amp = np.abs(E_total)
     Phase = np.angle(E_total)
-
-    Amp = Amp / np.max(Amp)
 
     return Amp, Phase, X, Y
 
@@ -112,7 +111,7 @@ def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, M=1, prepare=Fa
         if not os.path.exists(path):
             os.mkdir(path)
         hologram_final = cv2.normalize(hologram_final, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
-        cv2.imwrite(path+"/"+name+".png", hologram_final)
+        cv2.imwrite(path+"/"+name+".bmp", hologram_final)
         return 0
     else:
         return 0
@@ -144,7 +143,6 @@ if __name__ == '__main__':
             pixel_pitch=pixel_pitch,
             d=d,
             N_steps=N_steps,
-            M=3,
             prepare=True,
             save=True,
             path="./outputs",
@@ -164,5 +162,3 @@ if __name__ == '__main__':
             name="l=-16_measure_step"
         )
     }
-    print(experiments)
-

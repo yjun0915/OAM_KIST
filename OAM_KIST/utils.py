@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.interpolate import interp1d
 
-_lookuptable = np.linspace(0, np.pi, 10001)
+_lookuptable = np.linspace(0, np.pi + 1e-9, 10001)
 _sinc_values = np.sinc(_lookuptable / np.pi)
 
 _interpolator = interp1d(

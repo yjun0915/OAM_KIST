@@ -9,7 +9,7 @@ from OAM_KIST.utils import inv_sinc
 def test_inv_sinc_accuracy():
     """inv_sinc 함수가 예상된 수학적 값을 반환하는지 테스트"""
     x_val = 0.5
-    expected = -1.89547036302816116
+    expected = 1.89547036302816116
     result = inv_sinc(x_val)
 
     assert np.isclose(result, expected, atol=1e-4)
@@ -54,5 +54,5 @@ def test_encode_hologram_save(tmp_path):
         path=str(save_dir), name=file_name
     )
 
-    expected_file = save_dir / (file_name + ".png")
+    expected_file = save_dir / (file_name + ".bmp")
     assert expected_file.exists()
