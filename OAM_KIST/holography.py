@@ -2,6 +2,7 @@ import os
 
 import numpy as np
 import cv2
+from scipy.special import factorial
 
 from .utils import inv_sinc
 
@@ -38,13 +39,11 @@ def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, weights):
 
     E_total = np.zeros_like(Phi, dtype=complex)
     for l, w in zip(l_modes, weights):
-        # E = (sqrt(2)r/w)^|l| * exp(-r^2/w^2) * exp(il*phi)
-        E_total += w * (np.sqrt(2) * R / beam_w0) ** abs(l) * np.exp(-R ** 2 / beam_w0 ** 2) * np.exp(1j * l * Phi)
+        C = np.sqrt(2/(np.pi*factorial(np.abs(l))))
+        E_total += w * C * ((np.sqrt(2) * R / beam_w0) ** abs(l)) * np.exp(-(R**2) / (beam_w0**2)) * np.exp(-1j * l * Phi)
 
     Amp = np.abs(E_total)
     Phase = np.angle(E_total)
-
-    Amp = Amp / np.max(Amp)
 
     return Amp, Phase, X, Y
 
@@ -112,57 +111,8 @@ def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, M=1, prepare=Fa
         if not os.path.exists(path):
             os.mkdir(path)
         hologram_final = cv2.normalize(hologram_final, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
-        cv2.imwrite(path+"/"+name+".png", hologram_final)
+        cv2.imwrite(path+"/"+name+".bmp", hologram_final)
         return 0
     else:
         return 0
-
-
-if __name__ == '__main__':
-    res = [1920, 1080]
-    pixel_pitch = 8e-6
-    beam_w0 = 8e-4
-    l_modes = [-3, -1, 1, 3]
-    weights = [0.4, 0.03, 0.07, 0.5]
-    amp, phase, X, Y = generate_oam_superposition(
-        res=res,
-        pixel_pitch=pixel_pitch,
-        beam_w0=beam_w0,
-        l_modes=l_modes,
-        weights=weights
-    )
-
-    d = 8
-    N_steps = 8
-
-    experiments = {
-        "prepare": encode_hologram(
-            Amp=amp,
-            Phase=phase,
-            X=X,
-            Y=Y,
-            pixel_pitch=pixel_pitch,
-            d=d,
-            N_steps=N_steps,
-            M=3,
-            prepare=True,
-            save=True,
-            path="./outputs",
-            name="l=-16_prepare_step"
-        ),
-        "measure": encode_hologram(
-            Amp=amp,
-            Phase=phase,
-            X=X,
-            Y=Y,
-            pixel_pitch=pixel_pitch,
-            d=d,
-            N_steps=N_steps,
-            measure=True,
-            save=True,
-            path="./outputs",
-            name="l=-16_measure_step"
-        )
-    }
-    print(experiments)
 
