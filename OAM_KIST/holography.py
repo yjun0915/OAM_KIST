@@ -2,12 +2,12 @@ import os
 
 import numpy as np
 import cv2
-from scipy.special import factorial
+from scipy.special import factorial, eval_genlaguerre
 
 from .utils import inv_sinc
 
 
-def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, weights):
+def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, p_modes, weights):
     """ Creat E field of superimposed OAM mode (Interferogram method)
 
     Args:
@@ -38,9 +38,9 @@ def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, weights):
     R[R == 0] = 1e-10
 
     E_total = np.zeros_like(Phi, dtype=complex)
-    for l, w in zip(l_modes, weights):
-        C = np.sqrt(2/(np.pi*factorial(np.abs(l))))
-        E_total += w * C * ((np.sqrt(2) * R / beam_w0) ** abs(l)) * np.exp(-(R**2) / (beam_w0**2)) * np.exp(-1j * l * Phi)
+    for l, p, w in zip(l_modes, p_modes, weights):
+        C = np.sqrt(2 * factorial(p)/(np.pi*factorial(np.abs(l))))
+        E_total += w * C * ((np.sqrt(2) * R / beam_w0) ** abs(l)) * eval_genlaguerre(p,abs(l),2*((R**2)/(beam_w0**2))) * np.exp(-(R**2) / (beam_w0**2)) * np.exp(-1j * l * Phi)
 
     Amp = np.abs(E_total)
     Phase = np.angle(E_total)
