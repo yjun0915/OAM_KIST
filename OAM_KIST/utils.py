@@ -20,6 +20,30 @@ def inv_sinc(x):
         x (float or np.ndarray): Normalized Amplitude (0.0 ~ 1.0)
 
     Returns:
-        float or np.ndarray: Phase value (-pi ~ 0.0)
+        float or np.ndarray: Phase value (0.0 ~ -pi)
     """
     return _interpolator(x)
+
+
+_lookuptable_minus = np.linspace(-np.pi, 0, 10001)
+_sinc_values_minus = np.sinc(_lookuptable_minus / np.pi)
+
+_interpolator_minus = interp1d(
+    x=_sinc_values_minus,
+    y=_lookuptable_minus,
+    kind='linear',
+    bounds_error=False,
+    fill_value=(-np.pi, 0)
+)
+
+
+def inv_sinc_minus(x):
+    """Inverse Sinc function in minus domain.
+
+    Args:
+        x (float or np.ndarray): Normalized Amplitude (0.0 ~ 1.0)
+
+    Returns:
+        float or np.ndarray: Phase value (-pi ~ 0.0)
+    """
+    return _interpolator_minus(x)
