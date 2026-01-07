@@ -10,6 +10,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    needs: test
+
     steps:
     # 1. 깃허브 저장소 코드 가져오기
     - uses: actions/checkout@v4
