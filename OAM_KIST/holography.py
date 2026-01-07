@@ -103,14 +103,13 @@ def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, M=1, prepare=Fa
     hologram = modified_amp * np.mod(modified_phase + (parity * 2*np.pi * X_final), 2*np.pi)
 
 
-    hologram_final = hologram
+    hologram_final = cv2.normalize(hologram, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
 
     if not save:
         return hologram_final
     elif save:
         if not os.path.exists(path):
             os.mkdir(path)
-        hologram_final = cv2.normalize(hologram_final, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
         cv2.imwrite(path+"/"+name+".bmp", hologram_final)
         return 0
     else:
