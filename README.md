@@ -14,7 +14,7 @@
 ![OAM](https://img.shields.io/badge/🌀-OAM-black?labelColor=00C853)
 
 [![Python Test](https://github.com/yjun0915/OAM_KIST/actions/workflows/test.yml/badge.svg)](https://github.com/yjun0915/OAM_KIST/actions/workflows/test.yml)
-[![PyPI version](https://badge.fury.io/py/OAM_KIST.svg)](https://badge.fury.io/py/OAM_KIST)
+[![PyPI Version](https://img.shields.io/pypi/v/OAM_KIST)](https://pypi.org/project/OAM_KIST/)
 
 Imaging and sequence toolkit for Lageurre-Gaussian mode light, i.e. Orbital Angular Montum(OAM) state.  
 
