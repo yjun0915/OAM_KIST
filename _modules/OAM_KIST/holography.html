@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OAM_KIST.holography &mdash; OAM_KIST 0.2.18 documentation</title>
+  <title>OAM_KIST.holography &mdash; OAM_KIST 0.2.20 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=ae23a911"></script>
+      <script src="../../_static/documentation_options.js?v=20e0ead2"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -80,7 +80,7 @@
 
 <div class="viewcode-block" id="generate_oam_superposition">
 <a class="viewcode-back" href="../../OAM_KIST.html#OAM_KIST.holography.generate_oam_superposition">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">generate_oam_superposition</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">pixel_pitch</span><span class="p">,</span> <span class="n">beam_w0</span><span class="p">,</span> <span class="n">l_modes</span><span class="p">,</span> <span class="n">p_modes</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">generate_oam_superposition</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">pixel_pitch</span><span class="p">,</span> <span class="n">beam_w0</span><span class="p">,</span> <span class="n">l_modes</span><span class="p">,</span> <span class="n">p_modes</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">prepare</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Creat E field of superimposed OAM mode (Interferogram method)</span>
 
 <span class="sd">    Args:</span>
@@ -114,6 +114,12 @@
     <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">l_modes</span><span class="p">,</span> <span class="n">p_modes</span><span class="p">,</span> <span class="n">weights</span><span class="p">):</span>
         <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">factorial</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">factorial</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">l</span><span class="p">))))</span>
         <span class="n">E_total</span> <span class="o">+=</span> <span class="n">w</span> <span class="o">*</span> <span class="n">C</span> <span class="o">*</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">R</span> <span class="o">/</span> <span class="n">beam_w0</span><span class="p">)</span> <span class="o">**</span> <span class="nb">abs</span><span class="p">(</span><span class="n">l</span><span class="p">))</span> <span class="o">*</span> <span class="n">eval_genlaguerre</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="nb">abs</span><span class="p">(</span><span class="n">l</span><span class="p">),</span><span class="mi">2</span><span class="o">*</span><span class="p">((</span><span class="n">R</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">beam_w0</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">R</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">beam_w0</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">l</span> <span class="o">*</span> <span class="n">Phi</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">prepare</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
+        <span class="n">E_total</span> <span class="o">=</span> <span class="n">E_total</span>
+    <span class="k">elif</span> <span class="n">measure</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
+        <span class="n">E_total</span> <span class="o">=</span> <span class="n">E_total</span><span class="o">.</span><span class="n">conjugate</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
 
     <span class="n">Amp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">E_total</span><span class="p">)</span>
     <span class="n">Phase</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">E_total</span><span class="p">)</span>
