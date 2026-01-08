@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OAM_KIST.holography &mdash; OAM_KIST 0.2.17 documentation</title>
+  <title>OAM_KIST.holography &mdash; OAM_KIST 0.2.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=46390ad3"></script>
+      <script src="../../_static/documentation_options.js?v=ae23a911"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -75,7 +75,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">factorial</span><span class="p">,</span> <span class="n">eval_genlaguerre</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">inv_sinc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">inv_sinc</span><span class="p">,</span> <span class="n">inv_sinc_minus</span>
 
 
 <div class="viewcode-block" id="generate_oam_superposition">
@@ -124,7 +124,7 @@
 
 <div class="viewcode-block" id="encode_hologram">
 <a class="viewcode-back" href="../../OAM_KIST.html#OAM_KIST.holography.encode_hologram">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">encode_hologram</span><span class="p">(</span><span class="n">Amp</span><span class="p">,</span> <span class="n">Phase</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">pixel_pitch</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">N_steps</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prepare</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">encode_hologram</span><span class="p">(</span><span class="n">Amp</span><span class="p">,</span> <span class="n">Phase</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">pixel_pitch</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">N_steps</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prepare</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">use_inv_sinc_minus</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;phase mask for given amplitude and phase map of superimposed OAM mode.</span>
 
 <span class="sd">    입력받은 위상, 진폭 정보를 논문 공식에 대입하여 이 상태를 인코딩하는 SLM 홀로그램을 생성합니다.</span>
@@ -161,7 +161,12 @@
 <span class="sd">        &gt;&gt;&gt; encode_hologram(amp, phase, X, Y, pixel_pitch, 16, 0, prepare=True, save=True, path=&quot;./images&quot;, name=&quot;l8_dim16&quot;)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">modified_amp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">inv_sinc</span><span class="p">(</span><span class="n">Amp</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">use_inv_sinc_minus</span><span class="p">:</span>
+        <span class="n">modified_amp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">inv_sinc</span><span class="p">(</span><span class="n">Amp</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">use_inv_sinc_minus</span><span class="p">:</span>
+        <span class="n">modified_amp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">inv_sinc_minus</span><span class="p">(</span><span class="n">Amp</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;use_inv_sinc_minus argument must be True or False&quot;</span><span class="p">)</span>
     <span class="n">modified_amp</span> <span class="o">=</span> <span class="n">modified_amp</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">modified_amp</span><span class="p">)</span>
     <span class="n">modified_phase</span> <span class="o">=</span> <span class="n">Phase</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">modified_amp</span>
 
