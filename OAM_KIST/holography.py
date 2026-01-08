@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 from scipy.special import factorial, eval_genlaguerre
 
-from .utils import inv_sinc
+from .utils import inv_sinc, inv_sinc_minus
 
 
 def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, p_modes, weights):
@@ -48,7 +48,7 @@ def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, p_modes, weig
     return Amp, Phase, X, Y
 
 
-def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, M=1, prepare=False, measure=False, save=False, path="", name=""):
+def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, M=1, prepare=False, measure=False, save=False, path="", name="", use_inv_sinc_minus=False):
     """phase mask for given amplitude and phase map of superimposed OAM mode.
 
     입력받은 위상, 진폭 정보를 논문 공식에 대입하여 이 상태를 인코딩하는 SLM 홀로그램을 생성합니다.
@@ -85,7 +85,12 @@ def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, M=1, prepare=Fa
         >>> encode_hologram(amp, phase, X, Y, pixel_pitch, 16, 0, prepare=True, save=True, path="./images", name="l8_dim16")
     """
 
-    modified_amp = 1 + (1/np.pi)*inv_sinc(Amp)
+    if not use_inv_sinc_minus:
+        modified_amp = 1 + (1/np.pi)*inv_sinc(Amp)
+    elif use_inv_sinc_minus:
+        modified_amp = 1 + (1/np.pi)*inv_sinc_minus(Amp)
+    else:
+        raise NotImplementedError("use_inv_sinc_minus argument must be True or False")
     modified_amp = modified_amp / np.max(modified_amp)
     modified_phase = Phase - np.pi*modified_amp
 
