@@ -7,7 +7,7 @@ from scipy.special import factorial, eval_genlaguerre
 from .utils import inv_sinc, inv_sinc_minus
 
 
-def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, p_modes, weights, prepare=False, measure=False):
+def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, p_modes, weights, prepare=True, measure=False):
     """ Creat E field of superimposed OAM mode (Interferogram method)
 
     Args:
