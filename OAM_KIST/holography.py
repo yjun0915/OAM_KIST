@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 from scipy.special import factorial, eval_genlaguerre
 
-from .utils import inv_sinc, inv_sinc_minus
+from .utils import inv_sinc, inv_sinc_minus, diffraction
 
 
 def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, p_modes, weights, prepare=True, measure=False):
@@ -49,7 +49,7 @@ def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, p_modes, weig
     else: return 0
 
     Amp = np.abs(E_total)
-    Phase = np.angle(E_total)
+    Phase = np.angle(E_total) + np.pi
 
     return Amp, Phase, X, Y
 
@@ -104,14 +104,8 @@ def encode_hologram(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, M=1, prepare=Fa
     if prepare: parity = -1
     elif measure: parity = 1
 
-    if N_steps==0: N_steps = d
-    res = np.shape(X)[1]
-    X_normalized = (X + (res*pixel_pitch/2))/(pixel_pitch*d*M)
-    X_grating = X_normalized - X_normalized.astype(int)
-    X_stepped = np.floor(X_grating * N_steps)
-    X_final = cv2.normalize(X_stepped, X_stepped, 0, 1, cv2.NORM_MINMAX)
-
-    hologram = modified_amp * np.mod(modified_phase + (parity * 2*np.pi * X_final), 2*np.pi)
+    res = [np.shape(X)[1], np.shape(Y)[0]]
+    hologram = modified_amp * np.mod(modified_phase + (parity * diffraction(d, N_steps, res)), 2*np.pi)
 
 
     hologram_final = cv2.normalize(hologram, None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
