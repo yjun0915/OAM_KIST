@@ -67,4 +67,4 @@ def diffraction(l, n, res):
     for i in dlist:
         for j in range(len(step_list)):
             data_array[j + int(i)] = step_list[j]
-    return np.transpose(data_array)
+    return np.transpose(data_array)[0:res[1], :]
