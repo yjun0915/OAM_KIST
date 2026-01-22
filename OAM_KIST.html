@@ -8,14 +8,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OAM_KIST package &mdash; OAM_KIST 0.2.20 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="_static/documentation_options.js?v=20e0ead2"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -52,6 +52,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-OAM_KIST.utils">OAM_KIST.utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#OAM_KIST.utils.diffraction"><code class="docutils literal notranslate"><span class="pre">diffraction()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#OAM_KIST.utils.inv_sinc"><code class="docutils literal notranslate"><span class="pre">inv_sinc()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#OAM_KIST.utils.inv_sinc_minus"><code class="docutils literal notranslate"><span class="pre">inv_sinc_minus()</span></code></a></li>
 </ul>
@@ -123,6 +124,7 @@ Fundamental Gaussian 모드와의 분리를 위해서 간격이 d 픽셀인 그�
 <li><p><strong>save</strong> (<em>bool</em>) – decide whether to save.</p></li>
 <li><p><strong>path</strong> (<em>string</em>) – directory path for images. needed only when arg save is True</p></li>
 <li><p><strong>name</strong> (<em>string</em>) – filename of this image. needed only when arg save is True</p></li>
+<li><p><strong>use_inv_sinc_minus</strong> (<em>bool</em>) – whether to use inverse sinc in domain [-pi,0] or not.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -134,13 +136,22 @@ if arg save is False(default), a hologram in numpy ndarray. And if not, hologram
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pixel_pitch</span> <span class="o">=</span> <span class="mf">8e-1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">beam_w0</span> <span class="o">=</span> <span class="mf">0.8e-3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">l_modes</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">amp</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">generate_oam_superposition</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">pixel_pitch</span><span class="p">,</span> <span class="n">beam_w0</span><span class="p">,</span> <span class="n">l_modes</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">encode_hologram</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">pixel_pitch</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">prepare</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;./images&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;l8_dim16&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slm_res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slm_pitch</span> <span class="o">=</span> <span class="mf">8e-1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_w0</span> <span class="o">=</span> <span class="mf">0.8e-3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grating_width</span><span class="p">,</span> <span class="n">grating_step</span><span class="p">,</span> <span class="n">phase_depth</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grating_parameter</span> <span class="o">=</span> <span class="p">[</span><span class="n">grating_width</span><span class="p">,</span> <span class="n">grating_step</span><span class="p">,</span> <span class="n">phase_depth</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_l</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">target_l</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img_path</span><span class="p">,</span> <span class="n">img_name</span> <span class="o">=</span> <span class="s2">&quot;./img&quot;</span><span class="p">,</span> <span class="s2">&quot;superposition_oam&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">superposition_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">slm_res</span><span class="p">,</span> <span class="n">slm_pitch</span><span class="p">,</span> <span class="n">input_w0</span><span class="p">,</span> <span class="n">target_l</span><span class="p">,</span> <span class="n">target_p</span><span class="p">,</span> <span class="n">target_weights</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fields</span> <span class="o">=</span> <span class="n">generate_oam_superposition</span><span class="p">(</span><span class="o">*</span><span class="n">superposition_args</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hologram_args</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">fields</span><span class="p">,</span> <span class="n">slm_pitch</span><span class="p">,</span> <span class="o">*</span><span class="n">grating_parameter</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prepare_hologram</span> <span class="o">=</span> <span class="n">encode_hologram</span><span class="p">(</span><span class="o">*</span><span class="n">hologram_args</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hologram_args</span> <span class="o">=</span> <span class="n">hologram_args</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="n">img_path</span><span class="p">,</span> <span class="n">img_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encode_hologram</span><span class="p">(</span><span class="o">*</span><span class="n">hologram_args</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -156,7 +167,10 @@ if arg save is False(default), a hologram in numpy ndarray. And if not, hologram
 <li><p><strong>pixel_pitch</strong> (<em>float</em>) – pixel size. specified at device document</p></li>
 <li><p><strong>beam_w0</strong> (<em>float</em>) – beam-waist at z=0.</p></li>
 <li><p><strong>l_modes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – selected l indices for superposion. list with length 1 for eigen mode</p></li>
+<li><p><strong>p_modes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – selected p indices for superposion. list with length 1 for eigen mode</p></li>
 <li><p><strong>weights</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – weights for selected l modes.</p></li>
+<li><p><strong>prepare</strong> (<em>bool</em>) – whether to prepare the OAM superposition before generating superposition</p></li>
+<li><p><strong>measure</strong> (<em>bool</em>) – whether to measure the OAM superposition before generating superposition</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -167,12 +181,15 @@ if arg save is False(default), a hologram in numpy ndarray. And if not, hologram
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pixel_pitch</span> <span class="o">=</span> <span class="mf">8e-1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">beam_w0</span> <span class="o">=</span> <span class="mf">0.8e-3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">l_modes</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">amp</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">generate_oam_superposition</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">pixel_pitch</span><span class="p">,</span> <span class="n">beam_w0</span><span class="p">,</span> <span class="n">l_modes</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slm_res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slm_pitch</span> <span class="o">=</span> <span class="mf">8e-1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_w0</span> <span class="o">=</span> <span class="mf">0.8e-3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_l</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">target_l</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">superposition_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">slm_res</span><span class="p">,</span> <span class="n">slm_pitch</span><span class="p">,</span> <span class="n">input_w0</span><span class="p">,</span> <span class="n">target_l</span><span class="p">,</span> <span class="n">target_p</span><span class="p">,</span> <span class="n">target_weights</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fields</span> <span class="o">=</span> <span class="n">generate_oam_superposition</span><span class="p">(</span><span class="o">*</span><span class="n">superposition_args</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -180,6 +197,11 @@ if arg save is False(default), a hologram in numpy ndarray. And if not, hologram
 </section>
 <section id="module-OAM_KIST.utils">
 <span id="oam-kist-utils-module"></span><h2>OAM_KIST.utils module<a class="headerlink" href="#module-OAM_KIST.utils" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="OAM_KIST.utils.diffraction">
+<span class="sig-prename descclassname"><span class="pre">OAM_KIST.utils.</span></span><span class="sig-name descname"><span class="pre">diffraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OAM_KIST/utils.html#diffraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OAM_KIST.utils.diffraction" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="OAM_KIST.utils.inv_sinc">
 <span class="sig-prename descclassname"><span class="pre">OAM_KIST.utils.</span></span><span class="sig-name descname"><span class="pre">inv_sinc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OAM_KIST/utils.html#inv_sinc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OAM_KIST.utils.inv_sinc" title="Link to this definition"></a></dt>
@@ -241,6 +263,7 @@ Fundamental Gaussian 모드와의 분리를 위해서 간격이 d 픽셀인 그�
 <li><p><strong>save</strong> (<em>bool</em>) – decide whether to save.</p></li>
 <li><p><strong>path</strong> (<em>string</em>) – directory path for images. needed only when arg save is True</p></li>
 <li><p><strong>name</strong> (<em>string</em>) – filename of this image. needed only when arg save is True</p></li>
+<li><p><strong>use_inv_sinc_minus</strong> (<em>bool</em>) – whether to use inverse sinc in domain [-pi,0] or not.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -252,13 +275,22 @@ if arg save is False(default), a hologram in numpy ndarray. And if not, hologram
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pixel_pitch</span> <span class="o">=</span> <span class="mf">8e-1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">beam_w0</span> <span class="o">=</span> <span class="mf">0.8e-3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">l_modes</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">amp</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">generate_oam_superposition</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">pixel_pitch</span><span class="p">,</span> <span class="n">beam_w0</span><span class="p">,</span> <span class="n">l_modes</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">encode_hologram</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">pixel_pitch</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">prepare</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;./images&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;l8_dim16&quot;</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slm_res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slm_pitch</span> <span class="o">=</span> <span class="mf">8e-1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_w0</span> <span class="o">=</span> <span class="mf">0.8e-3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grating_width</span><span class="p">,</span> <span class="n">grating_step</span><span class="p">,</span> <span class="n">phase_depth</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grating_parameter</span> <span class="o">=</span> <span class="p">[</span><span class="n">grating_width</span><span class="p">,</span> <span class="n">grating_step</span><span class="p">,</span> <span class="n">phase_depth</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_l</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">target_l</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img_path</span><span class="p">,</span> <span class="n">img_name</span> <span class="o">=</span> <span class="s2">&quot;./img&quot;</span><span class="p">,</span> <span class="s2">&quot;superposition_oam&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">superposition_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">slm_res</span><span class="p">,</span> <span class="n">slm_pitch</span><span class="p">,</span> <span class="n">input_w0</span><span class="p">,</span> <span class="n">target_l</span><span class="p">,</span> <span class="n">target_p</span><span class="p">,</span> <span class="n">target_weights</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fields</span> <span class="o">=</span> <span class="n">generate_oam_superposition</span><span class="p">(</span><span class="o">*</span><span class="n">superposition_args</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hologram_args</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">fields</span><span class="p">,</span> <span class="n">slm_pitch</span><span class="p">,</span> <span class="o">*</span><span class="n">grating_parameter</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prepare_hologram</span> <span class="o">=</span> <span class="n">encode_hologram</span><span class="p">(</span><span class="o">*</span><span class="n">hologram_args</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hologram_args</span> <span class="o">=</span> <span class="n">hologram_args</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="n">img_path</span><span class="p">,</span> <span class="n">img_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encode_hologram</span><span class="p">(</span><span class="o">*</span><span class="n">hologram_args</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -274,7 +306,10 @@ if arg save is False(default), a hologram in numpy ndarray. And if not, hologram
 <li><p><strong>pixel_pitch</strong> (<em>float</em>) – pixel size. specified at device document</p></li>
 <li><p><strong>beam_w0</strong> (<em>float</em>) – beam-waist at z=0.</p></li>
 <li><p><strong>l_modes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – selected l indices for superposion. list with length 1 for eigen mode</p></li>
+<li><p><strong>p_modes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – selected p indices for superposion. list with length 1 for eigen mode</p></li>
 <li><p><strong>weights</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – weights for selected l modes.</p></li>
+<li><p><strong>prepare</strong> (<em>bool</em>) – whether to prepare the OAM superposition before generating superposition</p></li>
+<li><p><strong>measure</strong> (<em>bool</em>) – whether to measure the OAM superposition before generating superposition</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -285,12 +320,15 @@ if arg save is False(default), a hologram in numpy ndarray. And if not, hologram
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">pixel_pitch</span> <span class="o">=</span> <span class="mf">8e-1</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">beam_w0</span> <span class="o">=</span> <span class="mf">0.8e-3</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">l_modes</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">amp</span><span class="p">,</span> <span class="n">phase</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">generate_oam_superposition</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">pixel_pitch</span><span class="p">,</span> <span class="n">beam_w0</span><span class="p">,</span> <span class="n">l_modes</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slm_res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slm_pitch</span> <span class="o">=</span> <span class="mf">8e-1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_w0</span> <span class="o">=</span> <span class="mf">0.8e-3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_l</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">target_l</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">superposition_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">slm_res</span><span class="p">,</span> <span class="n">slm_pitch</span><span class="p">,</span> <span class="n">input_w0</span><span class="p">,</span> <span class="n">target_l</span><span class="p">,</span> <span class="n">target_p</span><span class="p">,</span> <span class="n">target_weights</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fields</span> <span class="o">=</span> <span class="n">generate_oam_superposition</span><span class="p">(</span><span class="o">*</span><span class="n">superposition_args</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
