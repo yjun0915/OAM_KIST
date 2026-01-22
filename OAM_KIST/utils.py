@@ -47,3 +47,24 @@ def inv_sinc_minus(x):
         float or np.ndarray: Phase value (-pi ~ 0.0)
     """
     return _interpolator_minus(x)
+
+
+def diffraction(l, n, res):
+    data_array = np.zeros((res[0], res[0]), dtype=float)
+    if l == 0 or n == 0:
+        return data_array
+
+    N_list = list(range(n))
+    index_list = np.arange(0, l, int(l / n))
+    dlist = np.linspace(0, res[0] - l, int(res[0] / l))
+    d = 2 * np.pi * ((n - 1) / n)
+
+    add_list = np.linspace(0, d, n)
+    step_list = []
+    for i in index_list:
+        for j in range(int(l / n)):
+            step_list.append(add_list[np.where(index_list == int(i))[0][0]])
+    for i in dlist:
+        for j in range(len(step_list)):
+            data_array[j + int(i)] = step_list[j]
+    return np.transpose(data_array)
