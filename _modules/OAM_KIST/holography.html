@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OAM_KIST.holography &mdash; OAM_KIST 0.2.22 documentation</title>
+  <title>OAM_KIST.holography &mdash; OAM_KIST 0.2.23 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=b360e4a1"></script>
+      <script src="../../_static/documentation_options.js?v=171860b8"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -212,6 +212,86 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">0</span></div>
 
+
+
+<div class="viewcode-block" id="encode_hologram_405">
+<a class="viewcode-back" href="../../OAM_KIST.html#OAM_KIST.holography.encode_hologram_405">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">encode_hologram_405</span><span class="p">(</span><span class="n">Amp</span><span class="p">,</span> <span class="n">Phase</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">pixel_pitch</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">N_steps</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">prepare</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">measure</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">use_inv_sinc_minus</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;phase mask for given amplitude and phase map of superimposed OAM mode.</span>
+
+<span class="sd">    입력받은 위상, 진폭 정보를 논문 공식에 대입하여 이 상태를 인코딩하는 SLM 홀로그램을 생성합니다.</span>
+<span class="sd">    Fundamental Gaussian 모드와의 분리를 위해서 간격이 d 픽셀인 그레이팅이 적용됩니다.</span>
+<span class="sd">    상태 준비에 사용될지, 측정에 사용될지에 따라서 그레이팅의 방향이 바뀝니다. 변수 parity가 이것을 반영합니다.</span>
+<span class="sd">    생성된 홀로그램을 저장할 수 있습니다.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Amp (np.ndarray[float]): amplitude map of superimposed OAM mode. 0. &lt;= *Amp &lt;= 1.</span>
+<span class="sd">        Phase (np.ndarray[float]): phase map of superimposed OAM mode. -pi &lt; *Phase &lt;= pi</span>
+<span class="sd">        X (np.ndarray[float]): x dependent meshgrid.</span>
+<span class="sd">        Y (np.ndarray[float]): y dependent meshgrid.</span>
+<span class="sd">        pixel_pitch (float): pixel size. specified at device document</span>
+<span class="sd">        d (float): grating width. dimension in # of pixel</span>
+<span class="sd">        N_steps (float): number of steps per grating with period d. N_steps=0 is equal to N_steps=d (continuous)</span>
+<span class="sd">        M (int): phase depth. M is basically 1</span>
+<span class="sd">        prepare (bool): decide whether to prepare.</span>
+<span class="sd">        measure (bool): decide whether to measure.</span>
+<span class="sd">        save (bool): decide whether to save.</span>
+<span class="sd">        path (string): directory path for images. needed only when arg save is True</span>
+<span class="sd">        name (string): filename of this image. needed only when arg save is True</span>
+<span class="sd">        use_inv_sinc_minus (bool): whether to use inverse sinc in domain [-pi,0] or not.</span>
+
+<span class="sd">    Return:</span>
+<span class="sd">        np.ndarray[float] or None: returns carculated hologram.</span>
+<span class="sd">        if arg save is False(default), a hologram in numpy ndarray. And if not, hologram is saved in the directory addording to arg path.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">        &gt;&gt;&gt; slm_res = [1920, 1080]</span>
+<span class="sd">        &gt;&gt;&gt; slm_pitch = 8e-1</span>
+<span class="sd">        &gt;&gt;&gt; input_w0 = 0.8e-3</span>
+<span class="sd">        &gt;&gt;&gt; grating_width, grating_step, phase_depth = 8, 8, 1</span>
+<span class="sd">        &gt;&gt;&gt; grating_parameter = [grating_width, grating_step, phase_depth]</span>
+<span class="sd">        &gt;&gt;&gt; target_l = [-3, -1, 1, 3]</span>
+<span class="sd">        &gt;&gt;&gt; target_p = np.zeros_like(target_l)</span>
+<span class="sd">        &gt;&gt;&gt; target_weights = [0.4, 0.03, 0.07, 0.5]</span>
+<span class="sd">        &gt;&gt;&gt; img_path, img_name = &quot;./img&quot;, &quot;superposition_oam&quot;</span>
+<span class="sd">        &gt;&gt;&gt; superposition_args = [slm_res, slm_pitch, input_w0, target_l, target_p, target_weights, True, False]</span>
+<span class="sd">        &gt;&gt;&gt; fields = generate_oam_superposition(*superposition_args)</span>
+<span class="sd">        &gt;&gt;&gt; hologram_args = [*fields, slm_pitch, *grating_parameter, True, False]</span>
+<span class="sd">        &gt;&gt;&gt; prepare_hologram = encode_hologram(*hologram_args)</span>
+<span class="sd">        &gt;&gt;&gt; hologram_args = hologram_args.append([True, img_path, img_name, False])</span>
+<span class="sd">        &gt;&gt;&gt; encode_hologram(*hologram_args)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">use_inv_sinc_minus</span><span class="p">:</span>
+        <span class="n">modified_amp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">inv_sinc</span><span class="p">(</span><span class="n">Amp</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">use_inv_sinc_minus</span><span class="p">:</span>
+        <span class="n">modified_amp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">inv_sinc_minus</span><span class="p">(</span><span class="n">Amp</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;use_inv_sinc_minus argument must be True or False&quot;</span><span class="p">)</span>
+    <span class="n">modified_amp</span> <span class="o">=</span> <span class="n">modified_amp</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">modified_amp</span><span class="p">)</span>
+    <span class="n">modified_phase</span> <span class="o">=</span> <span class="n">Phase</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">modified_amp</span>
+
+    <span class="n">parity</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">prepare</span><span class="p">:</span> <span class="n">parity</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">measure</span><span class="p">:</span> <span class="n">parity</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">carrier_phase</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">X</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">pixel_pitch</span> <span class="o">*</span> <span class="n">d</span><span class="p">)</span>
+
+    <span class="n">hologram</span> <span class="o">=</span> <span class="n">modified_amp</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">modified_phase</span> <span class="o">+</span> <span class="p">(</span><span class="n">parity</span> <span class="o">*</span> <span class="n">carrier_phase</span><span class="p">),</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+
+
+    <span class="n">hologram_final</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">hologram</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">NORM_MINMAX</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CV_8U</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">save</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">hologram_final</span>
+    <span class="k">elif</span> <span class="n">save</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">path</span><span class="o">+</span><span class="s2">&quot;/&quot;</span><span class="o">+</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot;.bmp&quot;</span><span class="p">,</span> <span class="n">hologram_final</span><span class="p">)</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span></div>
 
 </pre></div>
 

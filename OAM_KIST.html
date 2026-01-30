@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OAM_KIST package &mdash; OAM_KIST 0.2.22 documentation</title>
+  <title>OAM_KIST package &mdash; OAM_KIST 0.2.23 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=b360e4a1"></script>
+      <script src="_static/documentation_options.js?v=171860b8"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
@@ -48,6 +48,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-OAM_KIST.holography">OAM_KIST.holography module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#OAM_KIST.holography.encode_hologram"><code class="docutils literal notranslate"><span class="pre">encode_hologram()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#OAM_KIST.holography.encode_hologram_405"><code class="docutils literal notranslate"><span class="pre">encode_hologram_405()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#OAM_KIST.holography.generate_oam_superposition"><code class="docutils literal notranslate"><span class="pre">generate_oam_superposition()</span></code></a></li>
 </ul>
 </li>
@@ -113,6 +114,62 @@ Fundamental Gaussian 모드와의 분리를 위해서 간격이 d 픽셀인 그�
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Amp</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – amplitude map of superimposed OAM mode. 0. &lt;= <a href="#id1"><span class="problematic" id="id2">*</span></a>Amp &lt;= 1.</p></li>
 <li><p><strong>Phase</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – phase map of superimposed OAM mode. -pi &lt; <a href="#id3"><span class="problematic" id="id4">*</span></a>Phase &lt;= pi</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – x dependent meshgrid.</p></li>
+<li><p><strong>Y</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – y dependent meshgrid.</p></li>
+<li><p><strong>pixel_pitch</strong> (<em>float</em>) – pixel size. specified at device document</p></li>
+<li><p><strong>d</strong> (<em>float</em>) – grating width. dimension in # of pixel</p></li>
+<li><p><strong>N_steps</strong> (<em>float</em>) – number of steps per grating with period d. N_steps=0 is equal to N_steps=d (continuous)</p></li>
+<li><p><strong>M</strong> (<em>int</em>) – phase depth. M is basically 1</p></li>
+<li><p><strong>prepare</strong> (<em>bool</em>) – decide whether to prepare.</p></li>
+<li><p><strong>measure</strong> (<em>bool</em>) – decide whether to measure.</p></li>
+<li><p><strong>save</strong> (<em>bool</em>) – decide whether to save.</p></li>
+<li><p><strong>path</strong> (<em>string</em>) – directory path for images. needed only when arg save is True</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – filename of this image. needed only when arg save is True</p></li>
+<li><p><strong>use_inv_sinc_minus</strong> (<em>bool</em>) – whether to use inverse sinc in domain [-pi,0] or not.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>returns carculated hologram.
+if arg save is False(default), a hologram in numpy ndarray. And if not, hologram is saved in the directory addording to arg path.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.ndarray[float] or None</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slm_res</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1920</span><span class="p">,</span> <span class="mi">1080</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slm_pitch</span> <span class="o">=</span> <span class="mf">8e-1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">input_w0</span> <span class="o">=</span> <span class="mf">0.8e-3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grating_width</span><span class="p">,</span> <span class="n">grating_step</span><span class="p">,</span> <span class="n">phase_depth</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">grating_parameter</span> <span class="o">=</span> <span class="p">[</span><span class="n">grating_width</span><span class="p">,</span> <span class="n">grating_step</span><span class="p">,</span> <span class="n">phase_depth</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_l</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">target_l</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img_path</span><span class="p">,</span> <span class="n">img_name</span> <span class="o">=</span> <span class="s2">&quot;./img&quot;</span><span class="p">,</span> <span class="s2">&quot;superposition_oam&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">superposition_args</span> <span class="o">=</span> <span class="p">[</span><span class="n">slm_res</span><span class="p">,</span> <span class="n">slm_pitch</span><span class="p">,</span> <span class="n">input_w0</span><span class="p">,</span> <span class="n">target_l</span><span class="p">,</span> <span class="n">target_p</span><span class="p">,</span> <span class="n">target_weights</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fields</span> <span class="o">=</span> <span class="n">generate_oam_superposition</span><span class="p">(</span><span class="o">*</span><span class="n">superposition_args</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hologram_args</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">fields</span><span class="p">,</span> <span class="n">slm_pitch</span><span class="p">,</span> <span class="o">*</span><span class="n">grating_parameter</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prepare_hologram</span> <span class="o">=</span> <span class="n">encode_hologram</span><span class="p">(</span><span class="o">*</span><span class="n">hologram_args</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hologram_args</span> <span class="o">=</span> <span class="n">hologram_args</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="n">img_path</span><span class="p">,</span> <span class="n">img_name</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">encode_hologram</span><span class="p">(</span><span class="o">*</span><span class="n">hologram_args</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="OAM_KIST.holography.encode_hologram_405">
+<span class="sig-prename descclassname"><span class="pre">OAM_KIST.holography.</span></span><span class="sig-name descname"><span class="pre">encode_hologram_405</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Amp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_pitch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prepare</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">measure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_inv_sinc_minus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/OAM_KIST/holography.html#encode_hologram_405"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#OAM_KIST.holography.encode_hologram_405" title="Link to this definition"></a></dt>
+<dd><p>phase mask for given amplitude and phase map of superimposed OAM mode.</p>
+<p>입력받은 위상, 진폭 정보를 논문 공식에 대입하여 이 상태를 인코딩하는 SLM 홀로그램을 생성합니다.
+Fundamental Gaussian 모드와의 분리를 위해서 간격이 d 픽셀인 그레이팅이 적용됩니다.
+상태 준비에 사용될지, 측정에 사용될지에 따라서 그레이팅의 방향이 바뀝니다. 변수 parity가 이것을 반영합니다.
+생성된 홀로그램을 저장할 수 있습니다.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Amp</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – amplitude map of superimposed OAM mode. 0. &lt;= <a href="#id5"><span class="problematic" id="id6">*</span></a>Amp &lt;= 1.</p></li>
+<li><p><strong>Phase</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – phase map of superimposed OAM mode. -pi &lt; <a href="#id7"><span class="problematic" id="id8">*</span></a>Phase &lt;= pi</p></li>
 <li><p><strong>X</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – x dependent meshgrid.</p></li>
 <li><p><strong>Y</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – y dependent meshgrid.</p></li>
 <li><p><strong>pixel_pitch</strong> (<em>float</em>) – pixel size. specified at device document</p></li>
@@ -250,8 +307,8 @@ Fundamental Gaussian 모드와의 분리를 위해서 간격이 d 픽셀인 그�
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>Amp</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – amplitude map of superimposed OAM mode. 0. &lt;= <a href="#id5"><span class="problematic" id="id6">*</span></a>Amp &lt;= 1.</p></li>
-<li><p><strong>Phase</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – phase map of superimposed OAM mode. -pi &lt; <a href="#id7"><span class="problematic" id="id8">*</span></a>Phase &lt;= pi</p></li>
+<li><p><strong>Amp</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – amplitude map of superimposed OAM mode. 0. &lt;= <a href="#id9"><span class="problematic" id="id10">*</span></a>Amp &lt;= 1.</p></li>
+<li><p><strong>Phase</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – phase map of superimposed OAM mode. -pi &lt; <a href="#id11"><span class="problematic" id="id12">*</span></a>Phase &lt;= pi</p></li>
 <li><p><strong>X</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – x dependent meshgrid.</p></li>
 <li><p><strong>Y</strong> (<em>np.ndarray</em><em>[</em><em>float</em><em>]</em>) – y dependent meshgrid.</p></li>
 <li><p><strong>pixel_pitch</strong> (<em>float</em>) – pixel size. specified at device document</p></li>
