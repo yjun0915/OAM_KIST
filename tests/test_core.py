@@ -57,3 +57,39 @@ def test_encode_hologram_save(tmp_path):
 
     expected_file = save_dir / (file_name + ".bmp")
     assert expected_file.exists()
+
+
+def test_orthogonality():
+    res = [1920,1080]
+    pixel_pitch = 8e-6
+    beam_w0 = 8e-4
+    l_modes = [-3, -1, 1, 3]
+    p_modes = np.zeros_like(l_modes).tolist()
+    weights = [0.5, -0.5, 0.5j, 0.5j]
+
+    prepare_fields = generate_oam_superposition(
+        res=res,
+        pixel_pitch=pixel_pitch,
+        beam_w0=beam_w0,
+        l_modes=l_modes,
+        p_modes=p_modes,
+        weights=weights,
+        prepare=True,
+        measure=False
+    )
+
+    measure_fields = generate_oam_superposition(
+        res=res,
+        pixel_pitch=pixel_pitch,
+        beam_w0=beam_w0,
+        l_modes=l_modes,
+        p_modes=p_modes,
+        weights=weights,
+        prepare=False,
+        measure=True
+    )
+
+    tol = 1e-9
+    combined_field = prepare_fields[1] + measure_fields[1]
+
+    assert np.allclose(combined_field, 2 * np.pi, atol=tol)
