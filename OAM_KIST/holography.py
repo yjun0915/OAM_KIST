@@ -34,8 +34,8 @@ def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, p_modes, weig
         >>> superposition_args = [slm_res, slm_pitch, input_w0, target_l, target_p, target_weights, True, False]
         >>> fields = generate_oam_superposition(*superposition_args)
     """
-    x = np.linspace(-res[0] * pixel_pitch / 2, res[0] * pixel_pitch / 2, res[0])
-    y = np.linspace(-res[1] * pixel_pitch / 2, res[1] * pixel_pitch / 2, res[1])
+    x = np.linspace(-res[0] * pixel_pitch / 2, (res[0]-1) * pixel_pitch / 2, res[0])
+    y = np.linspace(-res[1] * pixel_pitch / 2, (res[1]-1) * pixel_pitch / 2, res[1])
     X, Y = np.meshgrid(x, y)
 
     R = np.sqrt(X ** 2 + Y ** 2)
