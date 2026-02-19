@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OAM_KIST.holography &mdash; OAM_KIST 0.2.25 documentation</title>
+  <title>OAM_KIST.holography &mdash; OAM_KIST 0.2.26 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=78e9746c"></script>
+      <script src="../../_static/documentation_options.js?v=4f11fe06"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -262,14 +262,18 @@
 <span class="sd">        &gt;&gt;&gt; hologram_args = hologram_args.append([True, img_path, img_name, False])</span>
 <span class="sd">        &gt;&gt;&gt; encode_hologram(*hologram_args)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">no_amp_modify</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">Phase</span><span class="p">,</span> <span class="n">Phase</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">use_inv_sinc_minus</span><span class="p">:</span>
-        <span class="n">modified_amp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">inv_sinc</span><span class="p">(</span><span class="n">Amp</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">use_inv_sinc_minus</span><span class="p">:</span>
-        <span class="n">modified_amp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">inv_sinc_minus</span><span class="p">(</span><span class="n">Amp</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">no_amp_modify</span><span class="p">:</span>
+        <span class="n">modified_amp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">Amp</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;use_inv_sinc_minus argument must be True or False&quot;</span><span class="p">)</span>
-    <span class="n">modified_amp</span> <span class="o">=</span> <span class="n">modified_amp</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">modified_amp</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">use_inv_sinc_minus</span><span class="p">:</span>
+            <span class="n">modified_amp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">inv_sinc</span><span class="p">(</span><span class="n">Amp</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">use_inv_sinc_minus</span><span class="p">:</span>
+            <span class="n">modified_amp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">inv_sinc_minus</span><span class="p">(</span><span class="n">Amp</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;use_inv_sinc_minus argument must be True or False&quot;</span><span class="p">)</span>
+        <span class="n">modified_amp</span> <span class="o">=</span> <span class="n">modified_amp</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">modified_amp</span><span class="p">)</span>
     <span class="n">modified_phase</span> <span class="o">=</span> <span class="n">Phase</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">modified_amp</span>
 
     <span class="n">parity</span> <span class="o">=</span> <span class="mi">0</span>
