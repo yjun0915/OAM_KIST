@@ -183,14 +183,18 @@ def encode_hologram_405(Amp, Phase, X, Y, pixel_pitch, d, N_steps=0, M=1, prepar
         >>> hologram_args = hologram_args.append([True, img_path, img_name, False])
         >>> encode_hologram(*hologram_args)
     """
+    no_amp_modify = np.allclose(Phase, Phase[0][0], atol=1e-1)
 
-    if not use_inv_sinc_minus:
-        modified_amp = 1 + (1/np.pi)*inv_sinc(Amp)
-    elif use_inv_sinc_minus:
-        modified_amp = 1 + (1/np.pi)*inv_sinc_minus(Amp)
+    if no_amp_modify:
+        modified_amp = np.full_like(Amp, 1)
     else:
-        raise NotImplementedError("use_inv_sinc_minus argument must be True or False")
-    modified_amp = modified_amp / np.max(modified_amp)
+        if not use_inv_sinc_minus:
+            modified_amp = 1 + (1/np.pi)*inv_sinc(Amp)
+        elif use_inv_sinc_minus:
+            modified_amp = 1 + (1/np.pi)*inv_sinc_minus(Amp)
+        else:
+            raise NotImplementedError("use_inv_sinc_minus argument must be True or False")
+        modified_amp = modified_amp / np.max(modified_amp)
     modified_phase = Phase - np.pi*modified_amp
 
     parity = 0
