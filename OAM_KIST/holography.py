@@ -45,7 +45,7 @@ def generate_oam_superposition(res, pixel_pitch, beam_w0, l_modes, p_modes, weig
 
     E_total = np.zeros_like(Phi, dtype=complex)
     for l, p, w in zip(l_modes, p_modes, weights):
-        C = np.sqrt(2 * factorial(p)/(np.pi*factorial(np.abs(l))))
+        C = np.sqrt(2 * factorial(p)/(np.pi*factorial(p+np.abs(l))))
         E_total += w * C * ((np.sqrt(2) * R / beam_w0) ** abs(l)) * eval_genlaguerre(p,abs(l),2*((R**2)/(beam_w0**2))) * np.exp(-(R**2) / (beam_w0**2)) * np.exp(-1j * l * Phi)
 
     if prepare:
