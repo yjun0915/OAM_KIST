@@ -1,4 +1,4 @@
-__version__ = '0.2.27'
+__version__ = '0.2.28'
 
 
 from .holography import generate_oam_superposition, encode_hologram, encode_hologram_405
